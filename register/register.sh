@@ -1,6 +1,5 @@
 #!/bin/sh
 
-
 QEMU_BIN_DIR=${QEMU_BIN_DIR:-/usr/bin}
 
 
@@ -13,6 +12,22 @@ fi
 
 if [ ! -f /proc/sys/fs/binfmt_misc/register ]; then
     mount binfmt_misc -t binfmt_misc /proc/sys/fs/binfmt_misc
+fi
+
+
+if [ "${1}" = "--reset" ]; then
+    (
+	cd /proc/sys/fs/binfmt_misc
+	for file in *; do
+	    case "${file}" in
+		status|register)
+		    ;;
+		*)
+		    echo -1 > "${file}"
+		    ;;
+	    esac
+	done
+    )
 fi
 
 
@@ -59,7 +74,6 @@ if [ $cpu != "ppc" ] ; then
     echo   ':ppc:M::\x7fELF\x01\x02\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x14:\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff:${QEMU_BIN_DIR}/qemu-ppc-static:' > /proc/sys/fs/binfmt_misc/register
 fi
 if [ $cpu != "m68k" ] ; then
-    echo   'Please check cpu value and header information for m68k!'
     echo   ':m68k:M::\x7fELF\x01\x02\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x04:\xff\xff\xff\xff\xff\xff\xff\x00\xff\xff\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff:${QEMU_BIN_DIR}/qemu-m68k-static:' > /proc/sys/fs/binfmt_misc/register
 fi
 if [ $cpu != "mips" ] ; then
