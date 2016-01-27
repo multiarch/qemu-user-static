@@ -1,5 +1,7 @@
 # qemu-user-static
 
+![](https://raw.githubusercontent.com/multiarch/dockerfile/master/logo.jpg)
+
 ## Binaries
 
 * Releases: https://github.com/multiarch/qemu-user-static/releases/
