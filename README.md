@@ -24,6 +24,7 @@ Same as above, but remove all registered `binfmt_misc` before
   * https://github.com/scaleway/image-builder
 * Release blog post: http://blog.m.42.am/post/138181251836/docker-multiarch-3-recently-i-started-the
 * Introduction article: https://eyskens.me/multiarch-docker-images/
+* Dockerized C benchmarks for both ARM and amd64 hardware: https://github.com/luxas/benchmark
 * Standalone image example: https://github.com/meyskens/multiarch-nodejs
 
 ## Compatible images
