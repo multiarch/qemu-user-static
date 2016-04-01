@@ -26,6 +26,10 @@ Same as above, but remove all registered `binfmt_misc` before
 * Introduction article: https://eyskens.me/multiarch-docker-images/
 * Dockerized C benchmarks for both ARM and amd64 hardware: https://github.com/luxas/benchmark
 * Standalone image example: https://github.com/meyskens/multiarch-nodejs
+* RaspberryPI + haskell hacks:
+  * https://github.com/TGOlson/rpi-haskell
+  * https://github.com/TGOlson/rpi-haskell-classy
+* Music notation software: https://github.com/musescore/MuseScore
 
 ## Compatible images
 
