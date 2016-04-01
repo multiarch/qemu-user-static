@@ -17,6 +17,15 @@ Same as above, but remove all registered `binfmt_misc` before
 
 * `docker run --rm --privileged multiarch/qemu-user-static:register --reset`
 
+## Examples & articles
+
+* Scaleway's build system:
+  * https://github.com/scaleway/image-tools
+  * https://github.com/scaleway/image-builder
+* Release blog post: http://blog.m.42.am/post/138181251836/docker-multiarch-3-recently-i-started-the
+* Introduction article: https://eyskens.me/multiarch-docker-images/
+* Standalone image example: https://github.com/meyskens/multiarch-nodejs
+
 ## Compatible images
 
 * https://hub.docker.com/r/multiarch/ubuntu-core/
@@ -30,6 +39,7 @@ Organizations with some (if not all) multiarch images:
 
 * https://hub.docker.com/u/multiarch/
 * https://hub.docker.com/u/scaleway/
+* https://hub.docker.com/u/meyskens/
 
 ## License
 
