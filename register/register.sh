@@ -43,7 +43,7 @@ case "$cpu" in
     mips*)
         cpu="mips"
         ;;
-    "Power Macintosh"|ppc|ppc64)
+    "Power Macintosh"|ppc|ppc64*)
         cpu="ppc"
         ;;
     armv[4-9]*)
