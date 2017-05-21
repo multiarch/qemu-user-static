@@ -3,11 +3,13 @@
 # A POSIX variable
 OPTIND=1 # Reset in case getopts has been used previously in the shell.
 
-while getopts "v:t:" opt; do
+while getopts "v:t:r:" opt; do
     case "$opt" in
         v)  VERSION=$OPTARG
         ;;
         t)  GITHUB_TOKEN=$OPTARG
+        ;;
+        r)  REPO=$OPTARG
         ;;
     esac
 done
@@ -16,13 +18,14 @@ shift $((OPTIND-1))
 
 [ "$1" = "--" ] && shift
 
+cd ./pkg/usr/bin/
 rm -rf releases
 mkdir releases
-cp /usr/bin/qemu-*-static releases/
+find . -regex './qemu-.*' -not -regex './qemu-system-.*' -exec cp {} releases \;
 cd releases/
 for file in *; do
-    tar -czf $file.tar.gz $file;
-    cp $file.tar.gz x86_64_$file.tar.gz
+    tar -czf $file-static.tar.gz $file;
+    cp $file-static.tar.gz x86_64_$file-static.tar.gz
 done
 
 # create a release
@@ -37,7 +40,7 @@ release_id=$(curl -sL -X POST \
   \"body\": \"# \`qemu-*-static\` @ ${VERSION}\",
   \"draft\": false,
   \"prerelease\": false
-}" "https://api.github.com/repos/multiarch/qemu-user-static/releases" | jq -r ".id")
+}" "https://api.github.com/repos/${REPO}/releases" | jq -r ".id")
 if [ "$release_id" = "null" ]; then
     # get the existing release id
     release_id=$(set -x; curl -sL \
@@ -45,7 +48,7 @@ if [ "$release_id" = "null" ]; then
     -H "Accept: application/vnd.github.v3+json" \
     -H "Authorization: token ${GITHUB_TOKEN}" \
     -H "Cache-Control: no-cache" \
-    "https://api.github.com/repos/multiarch/qemu-user-static/releases" | jq -r --arg version "$VERSION" '.[] | select(.name == "v"+$version).id')
+    "https://api.github.com/repos/${REPO}/releases" | jq -r --arg version "${VERSION}" '.[] | select(.name == "v"+$version).id')
 fi
 
 for file in *; do
@@ -54,5 +57,5 @@ for file in *; do
         -H "Authorization: token ${GITHUB_TOKEN}" \
         -H "Content-Type: ${content_type}" \
         --upload-file ${file} \
-        "https://uploads.github.com/repos/multiarch/qemu-user-static/releases/${release_id}/assets?name=${file}"
+        "https://uploads.github.com/repos/${REPO}/releases/${release_id}/assets?name=${file}"
 done

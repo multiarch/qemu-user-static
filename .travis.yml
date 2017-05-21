@@ -2,16 +2,18 @@ sudo: required
 services: docker
 language: bash
 env:
-    - VERSION=2.8.4
+    global:
+        - VERSION=2.9.0
+        - REPO=multiarch/qemu-user-static
 branches:
   only:
     - master
 before_script:
     - sudo apt-get install jq
-    - wget -N http://ftp.debian.org/debian/pool/main/q/qemu/qemu-user-static_2.8+dfsg-4+b2_amd64.deb
-    - sudo dpkg -i qemu-user-static_2.8+dfsg-4+b2_amd64.deb
+    - wget --content-disposition https://www.archlinux.org/packages/extra/x86_64/qemu-arch-extra/download/
+    - mkdir pkg && tar -xJvf qemu-arch-extra-2.9.0-1-x86_64.pkg.tar.xz -C ./pkg
 script:
-    - sudo ./publish.sh -v "$VERSION" -t "$GITHUB_TOKEN"
-    - sudo ./update.sh -v "$VERSION"
+    - sudo ./publish.sh -v "$VERSION" -t "$GITHUB_TOKEN" -r "$REPO"
+    - sudo ./update.sh -v "$VERSION" -r "$REPO"
 after_success:
-    - if [[ $TRAVIS_PULL_REQUEST == 'false' ]]; then docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" && docker push multiarch/qemu-user-static; fi
+    - if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'false' ]]; then docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" && docker push $REPO; fi
