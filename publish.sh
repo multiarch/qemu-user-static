@@ -20,7 +20,7 @@ shift $((OPTIND-1))
 
 cd ./pkg/usr/bin/
 rm -rf releases
-mkdir releases
+mkdir -p releases
 find . -regex './qemu-.*' -not -regex './qemu-system-.*' -exec cp {} releases \;
 cd releases/
 for file in *; do
