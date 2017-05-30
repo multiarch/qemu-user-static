@@ -249,9 +249,9 @@ qemu_set_binfmts() {
             continue
         fi
 
-        qemu="$QEMU_PATH/qemu-$cpu"
+        qemu="$QEMU_PATH/qemu-$cpu-static"
         if [ "$cpu" = "i486" ] ; then
-            qemu="$QEMU_PATH/qemu-i386"
+            qemu="$QEMU_PATH/qemu-i386-static"
         fi
 
         if [ "$host_family" != "$family" ] ; then
