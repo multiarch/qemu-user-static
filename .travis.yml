@@ -3,15 +3,15 @@ services: docker
 language: bash
 env:
     global:
-        - VERSION=2.9.0
+        - VERSION=2.9.1
         - REPO=multiarch/qemu-user-static
 branches:
   only:
     - master
 before_script:
-    - sudo apt-get install jq
-    - wget --content-disposition https://www.archlinux.org/packages/extra/x86_64/qemu-arch-extra/download/
-    - mkdir pkg && tar -xJvf qemu-arch-extra-2.9.0-1-x86_64.pkg.tar.xz -C ./pkg
+    - sudo apt-get install jq rpm2cpio cpio
+    - wget --content-disposition https://kojipkgs.fedoraproject.org/packages/qemu/2.9.0/1.fc27/x86_64/qemu-user-static-2.9.0-1.fc27.x86_64.rpm
+    - sudo rpm2cpio qemu-user-static-2.9.0-1.fc27.x86_64.rpm | cpio -dimv
 script:
     - sudo ./publish.sh -v "$VERSION" -t "$GITHUB_TOKEN" -r "$REPO"
     - sudo ./update.sh -v "$VERSION" -r "$REPO"
