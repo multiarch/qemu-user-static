@@ -18,14 +18,13 @@ shift $((OPTIND-1))
 
 [ "$1" = "--" ] && shift
 
-cd ./pkg/usr/bin/
 rm -rf releases
 mkdir releases
-find . -regex './qemu-.*' -not -regex './qemu-system-.*' -exec cp {} releases \;
+cp ./usr/bin/qemu-*-static releases/
 cd releases/
 for file in *; do
-    tar -czf $file-static.tar.gz $file;
-    cp $file-static.tar.gz x86_64_$file-static.tar.gz
+    tar -czf $file.tar.gz $file;
+    cp $file.tar.gz x86_64_$file.tar.gz
 done
 
 # create a release
