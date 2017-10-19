@@ -19,7 +19,8 @@ shift $((OPTIND-1))
 [ "$1" = "--" ] && shift
 
 rm -rf releases
-mkdir releases
+mkdir -p releases
+# find . -regex './qemu-.*' -not -regex './qemu-system-.*' -exec cp {} releases \;
 cp ./usr/bin/qemu-*-static releases/
 cd releases/
 for file in *; do
