@@ -14,7 +14,7 @@ if [ ! -f /proc/sys/fs/binfmt_misc/register ]; then
     mount binfmt_misc -t binfmt_misc /proc/sys/fs/binfmt_misc
 fi
 
-entries="aarch64 arm m68k mips64 mipsel mipsn32el ppc64 sh4 sparc alpha armeb mips mips64el mipsn32 ppc ppc64le s390x sh4eb"
+entries="aarch64 alpha arm armeb hppa m68k mips mips64 mips64el mipsel mipsn32 mipsn32el ppc ppc64 ppc64le s390x sh4 sh4eb sparc sparc32plus sparc64"
 
 if [ "${1}" = "--reset" ]; then
     shift
