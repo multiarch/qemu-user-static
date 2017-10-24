@@ -19,12 +19,12 @@ entries="aarch64 arm m68k mips64 mipsel mipsn32el ppc64 sh4 sparc alpha armeb mi
 if [ "${1}" = "--reset" ]; then
     shift
     (
-	cd /proc/sys/fs/binfmt_misc
-	for file in $entries; do
-            if [ -f $file ]; then
-		echo -1 > "${file}"
-            fi
-	done
+    cd /proc/sys/fs/binfmt_misc
+    for file in $entries; do
+        if [ -f qemu-${file} ]; then
+            echo -1 > qemu-${file}
+        fi
+    done
     )
 fi
 
