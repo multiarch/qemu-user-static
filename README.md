@@ -1,4 +1,4 @@
-# qemu-user-static
+# qemu-user-static [![Build Status](https://travis-ci.org/multiarch/qemu-user-static.svg?branch=master)](https://travis-ci.org/multiarch/qemu-user-static)
 
 ![](https://raw.githubusercontent.com/multiarch/dockerfile/master/logo.jpg)
 
