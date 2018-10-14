@@ -3,10 +3,10 @@ services: docker
 language: bash
 env:
     global:
-        - VERSION=3.0.0
+        - VERSION=3.0.0-1
         - REPO=multiarch/qemu-user-static
-        - PACKAGE_URI="https://kojipkgs.fedoraproject.org/packages/qemu/3.0.0/1.fc30/x86_64/qemu-user-static-3.0.0-1.fc30.x86_64.rpm"
-        - PACKAGE_FILENAME=qemu-user-static-3.0.0-1.fc30.x86_64.rpm
+        - PACKAGE_URI="https://kojipkgs.fedoraproject.org/packages/qemu/3.0.0/1.fc29/x86_64/qemu-user-static-3.0.0-1.fc29.x86_64.rpm"
+        - PACKAGE_FILENAME=qemu-user-static-3.0.0-1.fc29.x86_64.rpm
 branches:
   only:
     - master
