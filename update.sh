@@ -28,12 +28,10 @@ to_archs=("aarch64" "alpha" "arm" "armeb" "cris" "hppa" "i386" "m68k" "microblaz
 
 for to_arch in "${to_archs[@]}"; do
     if [ "$from_arch" != "$to_arch" ]; then
-        mkdir -p archs/$from_arch-$to_arch
-        cat > archs/$from_arch-$to_arch/Dockerfile <<EOF
+        docker build -t ${REPO}:$from_arch-$to_arch -<<EOF
 FROM scratch
 ADD https://github.com/${REPO}/releases/download/v${VERSION}/${from_arch}_qemu-${to_arch}-static.tar.gz /usr/bin
 EOF
-        docker build -t ${REPO}:$from_arch-$to_arch archs/$from_arch-$to_arch
         docker tag ${REPO}:$from_arch-$to_arch ${REPO}:$to_arch
     fi
 done
