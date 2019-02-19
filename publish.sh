@@ -1,22 +1,16 @@
 #!/bin/bash -e
 
-# A POSIX variable
-OPTIND=1 # Reset in case getopts has been used previously in the shell.
+[ -z "$VERSION" ] && VERSION="3.1.0-2"
+[ -z "$REPO" ] && REPO="multiarch/qemu-user-static"
 
-while getopts "v:t:r:" opt; do
-    case "$opt" in
-        v)  VERSION=$OPTARG
-        ;;
-        t)  GITHUB_TOKEN=$OPTARG
-        ;;
-        r)  REPO=$OPTARG
-        ;;
-    esac
-done
+echo "VER: $VERSION"
+echo "REPO: $REPO"
 
-shift $((OPTIND-1))
-
-[ "$1" = "--" ] && shift
+[ -z "$GITHUB_TOKEN" ] && {
+  echo "Environment variable $GITHUB_TOKEN is empty."
+  echo "  Skipping deployment of artifacts to GitHub Releases."
+  exit 0
+}
 
 # create a release
 release_id=$(curl -sL -X POST \
