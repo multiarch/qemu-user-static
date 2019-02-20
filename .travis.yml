@@ -1,5 +1,9 @@
 services: docker
 language: bash
+addons:
+  apt:
+    packages:
+      - pass
 env:
     global:
         - VERSION=3.1.0-2
@@ -15,4 +19,4 @@ script:
     - if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'false' ]]; then ./publish.sh -v "$VERSION" -t "$GITHUB_TOKEN" -r "$REPO"; fi
     - ./update.sh -v "$VERSION" -r "$REPO"
 after_success:
-    - if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'false' ]]; then docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" && docker push $REPO; fi
+    - if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'false' ]]; then ./deploy.sh; fi
