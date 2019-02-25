@@ -1,4 +1,3 @@
-sudo: required
 services: docker
 language: bash
 env:
@@ -7,15 +6,13 @@ env:
         - REPO=multiarch/qemu-user-static
         - PACKAGE_URI="https://kojipkgs.fedoraproject.org/packages/qemu/3.1.0/2.fc30/x86_64/qemu-user-static-3.1.0-2.fc30.x86_64.rpm"
         - PACKAGE_FILENAME=qemu-user-static-3.1.0-2.fc30.x86_64.rpm
-branches:
-  only:
-    - master
 before_script:
     - sudo apt-get install jq rpm2cpio cpio
     - wget --content-disposition $PACKAGE_URI
-    - sudo rpm2cpio $PACKAGE_FILENAME | cpio -dimv
+    - rpm2cpio $PACKAGE_FILENAME | cpio -dimv
 script:
-    - if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'false' ]]; then sudo ./publish.sh -v "$VERSION" -t "$GITHUB_TOKEN" -r "$REPO"; fi
-    - if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'false' ]]; then sudo ./update.sh -v "$VERSION" -r "$REPO"; fi
+    - ./generate_tarballs.sh
+    - if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'false' ]]; then ./publish.sh -v "$VERSION" -t "$GITHUB_TOKEN" -r "$REPO"; fi
+    - ./update.sh -v "$VERSION" -r "$REPO"
 after_success:
     - if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'false' ]]; then docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" && docker push $REPO; fi
