@@ -11,7 +11,8 @@ before_script:
     - wget --content-disposition $PACKAGE_URI
     - rpm2cpio $PACKAGE_FILENAME | cpio -dimv
 script:
-    - ./publish.sh -v "$VERSION" -t "$GITHUB_TOKEN" -r "$REPO"
+    - ./generate_tarballs.sh
+    - if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'false' ]]; then ./publish.sh -v "$VERSION" -t "$GITHUB_TOKEN" -r "$REPO"; fi
     - ./update.sh -v "$VERSION" -r "$REPO"
 after_success:
     - if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'false' ]]; then docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" && docker push $REPO; fi
