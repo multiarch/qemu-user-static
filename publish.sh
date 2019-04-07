@@ -41,6 +41,7 @@ if [ "$release_id" = "null" ]; then
     "https://api.github.com/repos/${REPO}/releases" | jq -r --arg version "${VERSION}" '.[] | select(.name == "v"+$version).id')
 fi
 
+cd releases/
 for file in *; do
     content_type=$(file --mime-type -b ${file})
     curl -sL \
