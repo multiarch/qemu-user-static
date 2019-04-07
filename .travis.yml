@@ -2,10 +2,10 @@ services: docker
 language: bash
 env:
     global:
-        - VERSION=3.1.0-2
+        - VERSION=3.1.0-3
         - REPO=multiarch/qemu-user-static
-        - PACKAGE_URI="https://kojipkgs.fedoraproject.org/packages/qemu/3.1.0/2.fc30/x86_64/qemu-user-static-3.1.0-2.fc30.x86_64.rpm"
-        - PACKAGE_FILENAME=qemu-user-static-3.1.0-2.fc30.x86_64.rpm
+        - PACKAGE_URI="https://kojipkgs.fedoraproject.org/packages/qemu/3.1.0/6.fc30/x86_64/qemu-user-static-3.1.0-6.fc30.x86_64.rpm"
+        - PACKAGE_FILENAME=qemu-user-static-3.1.0-6.fc30.x86_64.rpm
 before_script:
     - sudo apt-get install jq rpm2cpio cpio
     - wget --content-disposition $PACKAGE_URI
