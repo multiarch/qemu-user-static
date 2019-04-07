@@ -1,5 +1,15 @@
+dist: xenial
 services: docker
 language: bash
+addons:
+    apt:
+        config:
+            retries: true
+        update: true
+        packages:
+            - jq
+            - rpm2cpio
+            - cpio
 env:
     global:
         - VERSION=3.1.0-3
@@ -7,17 +17,18 @@ env:
         - PACKAGE_URI="https://kojipkgs.fedoraproject.org/packages/qemu/3.1.0/6.fc30/x86_64/qemu-user-static-3.1.0-6.fc30.x86_64.rpm"
         - PACKAGE_FILENAME=$(basename "$PACKAGE_URI")
 before_script:
-    - sudo apt-get install jq rpm2cpio cpio
     - wget --content-disposition $PACKAGE_URI
     - rpm2cpio $PACKAGE_FILENAME | cpio -dimv
 script:
     - ./generate_tarballs.sh
     - |
       if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'false' ]]; then
-        ./publish.sh -v "$VERSION" -t "$GITHUB_TOKEN" -r "$REPO" && ./update.sh -v "$VERSION" -r "$REPO";
+          ./publish.sh -v "$VERSION" -t "$GITHUB_TOKEN" -r "$REPO" && \
+              ./update.sh -v "$VERSION" -r "$REPO"
       fi
 after_success:
     - |
       if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'false' ]]; then
-        docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" && docker push $REPO;
+          docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" && \
+              docker push $REPO
       fi
