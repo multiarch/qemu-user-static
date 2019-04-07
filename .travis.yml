@@ -12,7 +12,12 @@ before_script:
     - rpm2cpio $PACKAGE_FILENAME | cpio -dimv
 script:
     - ./generate_tarballs.sh
-    - if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'false' ]]; then ./publish.sh -v "$VERSION" -t "$GITHUB_TOKEN" -r "$REPO"; fi
-    - ./update.sh -v "$VERSION" -r "$REPO"
+    - |
+      if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'false' ]]; then
+        ./publish.sh -v "$VERSION" -t "$GITHUB_TOKEN" -r "$REPO" && ./update.sh -v "$VERSION" -r "$REPO";
+      fi
 after_success:
-    - if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'false' ]]; then docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" && docker push $REPO; fi
+    - |
+      if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'false' ]]; then
+        docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" && docker push $REPO;
+      fi
