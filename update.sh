@@ -28,11 +28,16 @@ to_archs="aarch64 aarch64_be alpha armeb arm cris hppa i386 m68k microblazeel mi
 
 for to_arch in $to_archs; do
     if [ "$from_arch" != "$to_arch" ]; then
-        docker build -t ${REPO}:$from_arch-$to_arch -<<EOF
+        mkdir -p ${from_arch}_qemu-${to_arch}
+        curl -sSL -o "${from_arch}_qemu-${to_arch}/${from_arch}_qemu-${to_arch}-static.tar.gz" \
+            "https://github.com/${REPO}/releases/download/v${VERSION}/${from_arch}_qemu-${to_arch}-static.tar.gz"
+        cat > ${from_arch}_qemu-${to_arch}/Dockerfile -<<EOF
 FROM scratch
-ADD https://github.com/${REPO}/releases/download/v${VERSION}/${from_arch}_qemu-${to_arch}-static.tar.gz /usr/bin
+ADD ${from_arch}_qemu-${to_arch}-static.tar.gz /usr/bin/
 EOF
+        docker build -t ${REPO}:$from_arch-$to_arch ${from_arch}_qemu-${to_arch}
         docker tag ${REPO}:$from_arch-$to_arch ${REPO}:$to_arch
+        rm -rf ${from_arch}_qemu-${to_arch}
     fi
 done
 
