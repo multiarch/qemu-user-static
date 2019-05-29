@@ -19,6 +19,13 @@ Same as above, but remove all registered `binfmt_misc` before
 
 ---
 
+## Supported host architectures
+
+* x86_64
+
+Currently qemu-user-static is not available on other host architectures such as aarch64.
+Run `uname -m` to check it on your environment.
+
 ## Examples & articles
 
 * Scaleway's build system:
