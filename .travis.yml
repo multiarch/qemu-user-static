@@ -12,9 +12,11 @@ addons:
             - cpio
 env:
     global:
-        - VERSION=4.0.0
+        - VERSION=4.0.0-2
+        # See qemu-user-static's RPM spec file on Fedora to check the new version.
+        # https://src.fedoraproject.org/rpms/qemu/blob/master/f/qemu.spec
         - REPO=multiarch/qemu-user-static
-        - PACKAGE_URI="https://kojipkgs.fedoraproject.org/packages/qemu/4.0.0/1.fc31/x86_64/qemu-user-static-4.0.0-1.fc31.x86_64.rpm"
+        - PACKAGE_URI="https://kojipkgs.fedoraproject.org/packages/qemu/4.0.0/2.fc31/x86_64/qemu-user-static-4.0.0-2.fc31.x86_64.rpm"
         - PACKAGE_FILENAME=$(basename "$PACKAGE_URI")
 before_script:
     - wget --content-disposition $PACKAGE_URI
