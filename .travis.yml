@@ -15,7 +15,13 @@ env:
         - VERSION=4.0.0-5
         # See qemu-user-static's RPM spec file on Fedora to check the new version.
         # https://src.fedoraproject.org/rpms/qemu/blob/master/f/qemu.spec
+        - DOCKER_SERVER=docker.io
+        # - DOCKER_SERVER=quay.io
+        # Git repository
         - REPO=multiarch/qemu-user-static
+        # Container repository
+        - DOCKER_REPO=$DOCKER_SERVER/multiarch/qemu-user-static
+        # - DOCKER_REPO=$DOCKER_SERVER/your_username/qemu-user-static
         - PACKAGE_URI="https://kojipkgs.fedoraproject.org/packages/qemu/4.0.0/5.fc31/x86_64/qemu-user-static-4.0.0-5.fc31.x86_64.rpm"
         - PACKAGE_FILENAME=$(basename "$PACKAGE_URI")
 before_script:
@@ -25,12 +31,14 @@ script:
     - ./generate_tarballs.sh
     - |
       if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'false' ]]; then
-          ./publish.sh -v "$VERSION" -t "$GITHUB_TOKEN" -r "$REPO" && \
-              ./update.sh -v "$VERSION" -r "$REPO"
+          ./publish.sh -v "$VERSION" -t "$GITHUB_TOKEN" -r "$REPO"
       fi
+    - ./update.sh -v "$VERSION" -r "$REPO" -d "$DOCKER_REPO"
+    - docker images
+    - ./test.sh -d "$DOCKER_REPO"
 after_success:
     - |
       if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'false' ]]; then
-          docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" && \
-              docker push $REPO
+          docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" "$DOCKER_SERVER" && \
+              docker push "$DOCKER_REPO"
       fi
