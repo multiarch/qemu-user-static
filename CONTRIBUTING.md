@@ -1,4 +1,4 @@
-# How to contribute to multiarch/qemu-user-static
+# Contributing to multiarch/qemu-user-static
 
 Your contributions such as reporting a bug and sending pull-request are very wellcome! Thank you.
 
