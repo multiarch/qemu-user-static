@@ -191,11 +191,9 @@ The compatible image is the one to add `/usr/bin/qemu-$arch-static` binary insid
 Last time, we could not register binfmt_misc entry with `flags: F` (persistent option).
 When `flags: F` was not set, the interpreter always needed to be existed inside of the container to run the arch container.
 
-See [Users guide](docs/users_guide.md) for detail.
-
 ## Contributing
 
-We encourage you to contribute to **multiarch/qemu-user-static**! Please check out the [Contributing to multiarch/qemu-user-static guide](docs/CONTRIBUTING.md) for guidelines about how to proceed.
+We encourage you to contribute to **multiarch/qemu-user-static**! Please check out the [Contributing to multiarch/qemu-user-static guide](CONTRIBUTING.md) for guidelines about how to proceed.
 
 See [Developers guide](docs/developers_guide.md) for detail.
 
