@@ -44,6 +44,13 @@ $ docker run --rm -t ppc64le/busybox uname -m
 ppc64le
 ```
 
+For 32-bit container image, the result of `uname` can be the 64-bit's one. But it is 32-bit environment. Please see the [example](docs/examples.md) - junaruga/ci-multi-arch-test i386 case on Travis CI.
+
+```
+$ docker run --rm -t i386/ubuntu uname -m
+x86_64
+```
+
 Podman [4] also works.
 
 ```

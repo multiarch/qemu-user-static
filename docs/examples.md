@@ -4,6 +4,10 @@
 
 * [qemu-user-static (qus) and docker](https://github.com/dbhi/qus)
 
+## Examples and articles
+
+* [junaruga/ci-multi-arch-test](https://github.com/junaruga/ci-multi-arch-test) and the [Travis CI](https://travis-ci.org/junaruga/ci-multi-arch-test)
+
 ## Examples and articles [DEPRECATED]?
 
 * Scaleway's build system:
