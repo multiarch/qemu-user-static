@@ -1,29 +1,16 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -xeo pipefail
 
-# A POSIX variable
-OPTIND=1 # Reset in case getopts has been used previously in the shell.
-
-while getopts "d:" opt; do
-    case "$opt" in
-        d)  DOCKER_REPO=$OPTARG
-        ;;
-    esac
-done
-
-if [ "${DOCKER_REPO}" = "" ]; then
-    echo "DOCKER_REPO is required." 1>&2
-    exit 1
-fi
+# Convert Travis-provided repo SLUG to lowercase - Docker's requirement for tags
+SLUG="$(echo "${TRAVIS_REPO_SLUG}" | tr '[:upper:]' '[:lower:]')"
 
 # Test cases
-
 # ------------------------------------------------
 # multiarch/qemu-user-static image
 
 # It should register binfmt_misc entry with 'flags: F'
 # by given "-p yes" option.
-sudo docker run --rm --privileged ${DOCKER_REPO} --reset -p yes
+sudo docker run --rm --privileged "${SLUG}" --reset -p yes
 cat /proc/sys/fs/binfmt_misc/qemu-aarch64
 grep -q '^flags: F$' /proc/sys/fs/binfmt_misc/qemu-aarch64
 
@@ -53,7 +40,7 @@ docker run --rm -t arm64v8/fedora uname -m
 
 # It should register binfmt_misc entry with 'flags: '
 # by given no "-p yes" option.
-sudo docker run --rm --privileged ${DOCKER_REPO}:register --reset
+sudo docker run --rm --privileged "${SLUG}:register" --reset
 cat /proc/sys/fs/binfmt_misc/qemu-aarch64
 grep -q '^flags: $' /proc/sys/fs/binfmt_misc/qemu-aarch64
 
@@ -62,13 +49,12 @@ grep -q '^flags: $' /proc/sys/fs/binfmt_misc/qemu-aarch64
 # multiarch/qemu-user-static:$from_arch-$to_arch image
 
 # /usr/bin/qemu-aarch64-static should be included.
-docker run --rm -t ${DOCKER_REPO}:aarch64 /usr/bin/qemu-aarch64-static --version
-docker run --rm -t ${DOCKER_REPO}:x86_64-aarch64 /usr/bin/qemu-aarch64-static --version
+docker run --rm -t "${SLUG}:aarch64" /usr/bin/qemu-aarch64-static --version
 
 # ------------------------------------------------
 # Integration test
 docker build --rm -t "test/integration/ubuntu" -<<EOF
-FROM ${DOCKER_REPO}:x86_64-aarch64 as qemu
+FROM ${SLUG}:aarch64 as qemu
 FROM arm64v8/ubuntu
 COPY --from=qemu /usr/bin/qemu-aarch64-static /usr/bin
 EOF

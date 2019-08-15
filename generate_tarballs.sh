@@ -1,11 +1,17 @@
-#!/bin/bash -e
+#!/usr/bin/env bash
+
+#
+## This script compresses all qemu binaries, and prepares them for upload to Github Release later in the deploy step.
+
+if [[ -z "${TRAVIS_TAG}" ]]; then
+  echo "TRAVIS_TAG not specified.  Skipping tarball generation."
+  exit 0
+fi
 
 rm -rf releases
 mkdir -p releases
-# find . -regex './qemu-.*' -not -regex './qemu-system-.*' -exec cp {} releases \;
-cp ./usr/bin/qemu-*-static releases/
-cd releases/
-for file in *; do
-    tar -czf $file.tar.gz $file;
-    cp $file.tar.gz x86_64_$file.tar.gz
+
+for file in ./usr/bin/qemu-*-static; do
+  name="$(basename "${file}").tgz"
+  tar -cvzf "releases/${TRAVIS_TAG}-${name}" "${file}"
 done

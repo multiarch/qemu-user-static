@@ -3,42 +3,49 @@ services: docker
 language: bash
 addons:
     apt:
-        config:
-            retries: true
         update: true
         packages:
-            - jq
             - rpm2cpio
             - cpio
 env:
-    global:
-        - VERSION=4.0.0-5
-        # See qemu-user-static's RPM spec file on Fedora to check the new version.
-        # https://src.fedoraproject.org/rpms/qemu/blob/master/f/qemu.spec
-        - DOCKER_SERVER=docker.io
-        # - DOCKER_SERVER=quay.io
-        # Git repository
-        - REPO=multiarch/qemu-user-static
-        # Container repository
-        - DOCKER_REPO=$DOCKER_SERVER/multiarch/qemu-user-static
-        # - DOCKER_REPO=$DOCKER_SERVER/your_username/qemu-user-static
-        - PACKAGE_URI="https://kojipkgs.fedoraproject.org/packages/qemu/4.0.0/5.fc31/x86_64/qemu-user-static-4.0.0-5.fc31.x86_64.rpm"
-        - PACKAGE_FILENAME=$(basename "$PACKAGE_URI")
+  global:
+    # See qemu-user-static's RPM spec file on Fedora to check the new version.
+    # https://src.fedoraproject.org/rpms/qemu/blob/master/f/qemu.spec
+    # Container repository
+    - PACKAGE_URI="https://kojipkgs.fedoraproject.org/packages/qemu/4.0.0/5.fc31/x86_64/qemu-user-static-4.0.0-5.fc31.x86_64.rpm"
+    - PACKAGE_FILENAME=$(basename "$PACKAGE_URI")
+
+stages:
+  - build
+  - test
+  - name: deploy
+    if: tag IS present
+
+
 before_script:
-    - wget --content-disposition $PACKAGE_URI
-    - rpm2cpio $PACKAGE_FILENAME | cpio -dimv
-script:
+    - wget --content-disposition ${PACKAGE_URI}
+    - rpm2cpio ${PACKAGE_FILENAME} | cpio -dimv
     - ./generate_tarballs.sh
-    - |
-      if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'false' ]]; then
-          ./publish.sh -v "$VERSION" -t "$GITHUB_TOKEN" -r "$REPO"
-      fi
-    - ./update.sh -v "$VERSION" -r "$REPO" -d "$DOCKER_REPO"
-    - docker images
-    - ./test.sh -d "$DOCKER_REPO"
-after_success:
-    - |
-      if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'false' ]]; then
-          docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" "$DOCKER_SERVER" && \
-              docker push "$DOCKER_REPO"
-      fi
+
+jobs:
+  include:
+    - stage: build
+      name: "Build Docker image for amd64"
+      script: ./build-docker.sh
+
+    - stage: test
+      name: "Test generated images"
+      script: ./test.sh
+
+    - name: "Upload qemu binaries to Github Releases"
+      stage: deploy
+      deploy:
+        skip_cleanup: true
+        provider: releases
+        api_key:
+          secure: Q2ueVCN6jsXOn9iaf8ucAMWsLH+KkYrleSKRbMkJPu+qVacVcYFynm6yMwM63koVA8ADN80+yl7JUvqWx+MZLfCwR+/MRyGC2J0AlCDTBuvK55ETT4Kggtwb/2j6XrjQLlV+9Qkhb0JVpyO1475CjnoT9aOpWsHEHBymddQC13IQMn27XV1LJhunLw7+7Pqb73Yrml8PvnRLFqfqaaLZMoEUjbCjayjmgJY1HqUA2dtQBUnlASDLo3H6epJaDD8qpZTU4850I6TFwavSpRXq786+uqLWfXki0H9EJFkPMgEluul09BRXNS4RABC2darrIluQfK0EOS+acW4AHkTiM5s5YiT402WrD5VVjRCV0GoLrUjnnAFj+jm5fCXykSVJ04/tOMrTMnIgusmUYDRLJ9JUhFb6LS5pzg1ib9pfBmkUfRfEqymFfmsV32sZUyI3+C3NNjOuBiePtQ0gx3vzy1jWwqf5y4IlvMjYyQE11J0PZBjrcZWSXaFlQ34Wl7jZgr+WXJ3a717LX+TbpVjTAuJdPv4vTDJ755avOAM3IgGLFONg7x/5+yroe5dtnHsS5g2Gy8ZYF+Kb0I14x+8Hgi/jRxdF3cKvOoO8MvnK6zeDB4EDolWyTXHwfmpkJOtW+LbvJTJffg5bhoeevpJWaebJqzkusY3/nevG8FYAv2Y=
+        file_glob: true
+        file: releases/*.tgz
+        on:
+          repo: ${TRAVIS_REPO_SLUG}
+          tags: true

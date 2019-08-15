@@ -4,5 +4,5 @@
 /containers/latest/qemu-*-static
 /containers/register/Dockerfile
 /containers/register/register.sh
-/containers/x86_64_qemu-*/
+/containers/qemu-*/
 /releases
