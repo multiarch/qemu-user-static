@@ -2,7 +2,7 @@
 set -xeo pipefail
 
 # Convert Travis-provided repo SLUG to lowercase - Docker's requirement for tags
-SLUG="$(echo "${TRAVIS_REPO_SLUG}" | tr '[:upper:]' '[:lower:]')"
+SLUG="$(echo "${TRAVIS_REPO_SLUG:-$DOCKER_REPO}" | tr '[:upper:]' '[:lower:]')"
 
 # Test cases
 # ------------------------------------------------
