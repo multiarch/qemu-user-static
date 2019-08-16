@@ -12,7 +12,14 @@ addons:
             - cpio
 env:
     global:
-        - VERSION=4.0.0-5
+        - MAJOR_VERSION=4
+        - MINOR_VERSION=0
+        - PATCH_VERSION=0
+        - RELEASE_VERSION=5
+        - VERSION=$MAJOR_VERSION.$MINOR_VERSION.$PATCH_VERSION-$RELEASE_VERSION
+        # Container tag version string.
+        # Set it here to give a flexibility of the value such as "vX.Y".
+        - TAG_VER=v$VERSION
         # See qemu-user-static's RPM spec file on Fedora to check the new version.
         # https://src.fedoraproject.org/rpms/qemu/blob/master/f/qemu.spec
         - DOCKER_SERVER=docker.io
@@ -33,7 +40,7 @@ script:
       if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'false' ]]; then
           ./publish.sh -v "$VERSION" -t "$GITHUB_TOKEN" -r "$REPO"
       fi
-    - ./update.sh -v "$VERSION" -r "$REPO" -d "$DOCKER_REPO"
+    - ./update.sh -v "$VERSION" -t "$TAG_VER" -r "$REPO" -d "$DOCKER_REPO"
     - docker images
     - ./test.sh -d "$DOCKER_REPO"
 after_success:
