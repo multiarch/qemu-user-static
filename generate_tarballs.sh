@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash -e
 
 #
 ## This script compresses all qemu binaries, and prepares them for upload to Github Release later in the deploy step.

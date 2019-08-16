@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash -e
 set -xeo pipefail
 
 # Convert Travis-provided repo SLUG to lowercase - Docker's requirement for tags
