@@ -69,7 +69,7 @@ if [[ -n "${TRAVIS_TAG}" ]]; then
     fi
 
     # Login to Docker Hub
-    echo "${DOCKER_PASS}" | docker login -u="${DOCKER_USER}" --password-stdin
+    echo "${DOCKER_PASSWORD}" | docker login -u="${DOCKER_USERNAME}" --password-stdin
 
     MINOR_TAG="$(echo "${TRAVIS_TAG}" | cut -d. -f1).$(echo "${TRAVIS_TAG}" | cut -d. -f2)"
 
