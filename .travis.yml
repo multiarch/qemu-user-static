@@ -3,6 +3,8 @@ services: docker
 language: bash
 addons:
     apt:
+        config:
+            retries: true
         update: true
         packages:
             - rpm2cpio
