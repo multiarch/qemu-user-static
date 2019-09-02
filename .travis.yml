@@ -6,6 +6,15 @@ addons:
         config:
             retries: true
         update: true
+        sources:
+            # Install rpm2cpio (4.14.1+dfsg1-2) and
+            # cpio (2.12+dfsg-6) packages for bionic,
+            # the error "cpio: Malformed number" happens
+            # for qemu-user-static-4.1.0-1.fc31.x86_64.rpm,
+            # with rpm2cpio (4.12.0.1+dfsg1-3build3) and
+            # cpio (2.11+dfsg-5ubuntu1) and rpm2cpio for xenial.
+            # https://packages.ubuntu.com/bionic/cpio
+            - sourceline: 'deb http://archive.ubuntu.com/ubuntu bionic main universe'
         packages:
             - jq
             - rpm2cpio
@@ -13,9 +22,9 @@ addons:
 env:
     global:
         - MAJOR_VERSION=4
-        - MINOR_VERSION=0
+        - MINOR_VERSION=1
         - PATCH_VERSION=0
-        - RELEASE_VERSION=4
+        - RELEASE_VERSION=1
         - VERSION=$MAJOR_VERSION.$MINOR_VERSION.$PATCH_VERSION-$RELEASE_VERSION
         # Container tag version string.
         # Set it here to give a flexibility of the value such as "X.Y".
@@ -29,7 +38,7 @@ env:
         # Container repository
         - DOCKER_REPO=$DOCKER_SERVER/multiarch/qemu-user-static
         # - DOCKER_REPO=$DOCKER_SERVER/your_username/qemu-user-static
-        - PACKAGE_URI="https://kojipkgs.fedoraproject.org/packages/qemu/4.0.0/4.fc31/x86_64/qemu-user-static-4.0.0-4.fc31.x86_64.rpm"
+        - PACKAGE_URI="https://kojipkgs.fedoraproject.org/packages/qemu/4.1.0/1.fc31/x86_64/qemu-user-static-4.1.0-1.fc31.x86_64.rpm"
         - PACKAGE_FILENAME=$(basename "$PACKAGE_URI")
 before_script:
     - wget --content-disposition $PACKAGE_URI
