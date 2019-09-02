@@ -12,10 +12,10 @@ addons:
             - cpio
 env:
     global:
-        - MAJOR_VERSION=3
-        - MINOR_VERSION=1
-        - PATCH_VERSION=1
-        - RELEASE_VERSION=2
+        - MAJOR_VERSION=4
+        - MINOR_VERSION=0
+        - PATCH_VERSION=0
+        - RELEASE_VERSION=4
         - VERSION=$MAJOR_VERSION.$MINOR_VERSION.$PATCH_VERSION-$RELEASE_VERSION
         # Container tag version string.
         # Set it here to give a flexibility of the value such as "X.Y".
@@ -29,7 +29,7 @@ env:
         # Container repository
         - DOCKER_REPO=$DOCKER_SERVER/multiarch/qemu-user-static
         # - DOCKER_REPO=$DOCKER_SERVER/your_username/qemu-user-static
-        - PACKAGE_URI="https://kojipkgs.fedoraproject.org/packages/qemu/3.1.1/2.fc30/x86_64/qemu-user-static-3.1.1-2.fc30.x86_64.rpm"
+        - PACKAGE_URI="https://kojipkgs.fedoraproject.org/packages/qemu/4.0.0/4.fc31/x86_64/qemu-user-static-4.0.0-4.fc31.x86_64.rpm"
         - PACKAGE_FILENAME=$(basename "$PACKAGE_URI")
 before_script:
     - wget --content-disposition $PACKAGE_URI
