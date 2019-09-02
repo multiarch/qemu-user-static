@@ -18,8 +18,8 @@ env:
         - RELEASE_VERSION=5
         - VERSION=$MAJOR_VERSION.$MINOR_VERSION.$PATCH_VERSION-$RELEASE_VERSION
         # Container tag version string.
-        # Set it here to give a flexibility of the value such as "vX.Y".
-        - TAG_VER=v$VERSION
+        # Set it here to give a flexibility of the value such as "X.Y".
+        - TAG_VER=$VERSION
         # See qemu-user-static's RPM spec file on Fedora to check the new version.
         # https://src.fedoraproject.org/rpms/qemu/blob/master/f/qemu.spec
         - DOCKER_SERVER=docker.io
