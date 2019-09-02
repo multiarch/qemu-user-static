@@ -49,8 +49,13 @@ for to_arch in $to_archs; do
     if [ "$from_arch" != "$to_arch" ]; then
         work_dir="${out_dir}/${from_arch}_qemu-${to_arch}"
         mkdir -p "${work_dir}"
-        curl -sSL -o "${work_dir}/${from_arch}_qemu-${to_arch}-static.tar.gz" \
-            "https://github.com/${REPO}/releases/download/v${VERSION}/${from_arch}_qemu-${to_arch}-static.tar.gz"
+        tar_gz_url="https://github.com/${REPO}/releases/download/v${VERSION}/${from_arch}_qemu-${to_arch}-static.tar.gz"
+        http_status="$(curl -s -o /dev/null -w "%{http_code}" "${tar_gz_url}")"
+        if [ "${http_status}" = 404 ]; then
+            echo "URL not found: ${tar_gz_url}" 1>&2
+            exit 1
+        fi
+        curl -sSL -o "${work_dir}/${from_arch}_qemu-${to_arch}-static.tar.gz" "${tar_gz_url}"
         tar xzvf "${work_dir}/${from_arch}_qemu-${to_arch}-static.tar.gz" -C "${work_dir}"
         rm -f "${work_dir}/${from_arch}_qemu-${to_arch}-static.tar.gz"
 
