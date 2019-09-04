@@ -78,13 +78,26 @@ aarch64
 multiarch/qemu-user-static images are managed on the [Docker Hub](https://hub.docker.com/r/multiarch/qemu-user-static/) container repository.
 The images have below tags.
 
-1. `multiarch/qemu-user-static` image
-2. `multiarch/qemu-user-static:$from_arch-$to_arch` images
-3. `multiarch/qemu-user-static:$to_arch` images
-4. `multiarch/qemu-user-static:register` image
+**Images**
 
-* `multiarch/qemu-user-static` image container includes both a register script to register binfmt_misc entries and all the `/usr/bin/qemu-$arch-static` binary files in the container in it.
-* `multiarch/qemu-user-static:$to_arch` images are aliases of `multiarch/qemu-user-static:x86_64-$to_arch`. A `multiarch/qemu-user-static:$to_arch` images only includes the `$to_arch`'s `/usr/bin/qemu-$to_arch-static` binary file in it.
+1. `multiarch/qemu-user-static` image
+2. `multiarch/qemu-user-static:$version` images
+3. `multiarch/qemu-user-static:$from_arch-$to_arch` images
+4. `multiarch/qemu-user-static:$from_arch-$to_arch-$version` images
+5. `multiarch/qemu-user-static:$to_arch` images
+6. `multiarch/qemu-user-static:$to_arch-$version` images
+7. `multiarch/qemu-user-static:register` image
+
+**Variables**
+
+* `$version`: Based QEMU's version.
+* `$from_arch`: Host architecture
+* `$to_arch`: Guest architecture
+
+**Description**
+
+* `multiarch/qemu-user-static` image container includes both a register script to register binfmt_misc entries and all the `/usr/bin/qemu-$arch-static` binary files in the container in it. `multiarch/qemu-user-static` image is an alias of the latest version of `multiarch/qemu-user-static:$version` images.
+* `multiarch/qemu-user-static:$to_arch` images are aliases of `multiarch/qemu-user-static:x86_64-$to_arch`. `multiarch/qemu-user-static:$to_arch` images only include the `$to_arch`'s `/usr/bin/qemu-$to_arch-static` binary file in it. `multiarch/qemu-user-static:$to_arch` image is an alias of the latest version of `multiarch/qemu-user-static:$to_arch-$version` images.
 * `multiarch/qemu-user-static:register` image has only the register script binfmt_misc entries.
 
 `multiarch/qemu-user-static` and `multiarch/qemu-user-static:register` images execute the register script that registers below kind of `/proc/sys/fs/binfmt_misc/qemu-$arch` files for all supported processors except the current one in it when running the container. See binfmt_misc manual [2] for detail of the files.
