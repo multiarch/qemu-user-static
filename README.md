@@ -60,14 +60,12 @@ $ podman run --rm -t arm64v8/fedora uname -m
 aarch64
 ```
 
-Singularity [5] also works. But I do not understand the warnings.
+Singularity [5] also works.
 
 ```
 $ sudo singularity run docker://multiarch/qemu-user-static --reset -p yes
 
-$ singularity run docker://arm64v8/fedora uname -m
-/bin/sh: warning: setlocale: LC_ALL: cannot change locale (en_US.UTF-8)
-/bin/sh: warning: setlocale: LC_ALL: cannot change locale (en_US.UTF-8)
+$ singularity run --cleanenv docker://arm64v8/fedora uname -m
 aarch64
 ```
 
