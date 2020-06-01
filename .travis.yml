@@ -14,7 +14,7 @@ addons:
             # with rpm2cpio (4.12.0.1+dfsg1-3build3) and
             # cpio (2.11+dfsg-5ubuntu1) and rpm2cpio for xenial.
             # https://packages.ubuntu.com/bionic/cpio
-            - sourceline: 'deb http://archive.ubuntu.com/ubuntu bionic main universe'
+            - sourceline: "deb http://archive.ubuntu.com/ubuntu bionic main universe"
         packages:
             - jq
             - rpm2cpio
@@ -38,7 +38,7 @@ env:
         # Container repository
         - DOCKER_REPO=$DOCKER_SERVER/multiarch/qemu-user-static
         # - DOCKER_REPO=$DOCKER_SERVER/your_username/qemu-user-static
-        - PACKAGE_URI="https://kojipkgs.fedoraproject.org/packages/qemu/4.2.0/7.fc33/x86_64/qemu-user-static-4.2.0-7.fc33.x86_64.rpm"
+        - PACKAGE_URI="https://kojipkgs.fedoraproject.org/packages/qemu/5.0.0/2.fc33/x86_64/qemu-user-static-5.0.0-2.fc33.x86_64.rpm"
         - PACKAGE_FILENAME=$(basename "$PACKAGE_URI")
 before_script:
     - wget --content-disposition $PACKAGE_URI
@@ -46,15 +46,15 @@ before_script:
 script:
     - ./generate_tarballs.sh
     - |
-      if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'false' ]]; then
-          ./publish.sh -v "$VERSION" -t "$GITHUB_TOKEN" -r "$REPO"
-      fi
+        if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'false' ]]; then
+            ./publish.sh -v "$VERSION" -t "$GITHUB_TOKEN" -r "$REPO"
+        fi
     - ./update.sh -v "$VERSION" -t "$TAG_VER" -r "$REPO" -d "$DOCKER_REPO"
     - docker images
     - ./test.sh -d "$DOCKER_REPO"
 after_success:
     - |
-      if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'false' ]]; then
-          docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" "$DOCKER_SERVER" && \
-              docker push "$DOCKER_REPO"
-      fi
+        if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'false' ]]; then
+            docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" "$DOCKER_SERVER" && \
+                docker push "$DOCKER_REPO"
+        fi
