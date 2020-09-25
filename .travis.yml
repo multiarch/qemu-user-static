@@ -21,14 +21,10 @@ addons:
             - cpio
 env:
     global:
-        - MAJOR_VERSION=5
-        - MINOR_VERSION=1
-        - PATCH_VERSION=0
-        - RELEASE_VERSION=2
-        - VERSION=$MAJOR_VERSION.$MINOR_VERSION.$PATCH_VERSION-$RELEASE_VERSION
-        # Container tag version string.
-        # Set it here to give a flexibility of the value such as "X.Y".
-        - TAG_VER=$VERSION
+        - RELEASE=5.1.0
+        - BUILD=2.eln103
+        - BUILD_NUM=$(echo $BUILD | sed 's/\..*//')
+        - VERSION=$RELEASE-$BUILD_NUM
         # See qemu-user-static's RPM spec file on Fedora to check the new version.
         # https://src.fedoraproject.org/rpms/qemu/blob/master/f/qemu.spec
         - DOCKER_SERVER=docker.io
@@ -38,7 +34,7 @@ env:
         # Container repository
         - DOCKER_REPO=$DOCKER_SERVER/multiarch/qemu-user-static
         # - DOCKER_REPO=$DOCKER_SERVER/your_username/qemu-user-static
-        - PACKAGE_URI="https://kojipkgs.fedoraproject.org/packages/qemu/5.1.0/2.eln103/x86_64/qemu-user-static-5.1.0-2.eln103.x86_64.rpm"
+        - PACKAGE_URI="https://kojipkgs.fedoraproject.org/packages/qemu/$RELEASE/$BUILD/x86_64/qemu-user-static-$RELEASE-$BUILD.x86_64.rpm"
         - PACKAGE_FILENAME=$(basename "$PACKAGE_URI")
 before_script:
     - wget --content-disposition $PACKAGE_URI
@@ -49,7 +45,7 @@ script:
         if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'false' ]]; then
             ./publish.sh -v "$VERSION" -t "$GITHUB_TOKEN" -r "$REPO"
         fi
-    - ./update.sh -v "$VERSION" -t "$TAG_VER" -r "$REPO" -d "$DOCKER_REPO"
+    - ./update.sh -v "$VERSION" -t "$VERSION" -r "$REPO" -d "$DOCKER_REPO"
     - docker images
     - ./test.sh -d "$DOCKER_REPO"
 after_success:
