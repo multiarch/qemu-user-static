@@ -22,7 +22,7 @@ addons:
 env:
     global:
         - RELEASE=5.1.0
-        - BUILD=2.eln103
+        - BUILD=5.fc34
         - BUILD_NUM=$(echo $BUILD | sed 's/\..*//')
         - VERSION=$RELEASE-$BUILD_NUM
         # See qemu-user-static's RPM spec file on Fedora to check the new version.
