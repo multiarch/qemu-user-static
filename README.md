@@ -1,6 +1,6 @@
 # qemu-user-static
 
-[![License](https://img.shields.io/github/license/multiarch/qemu-user-static.svg?style=flat-square)](./LICENSE) [![Build Status](https://img.shields.io/travis/multiarch/qemu-user-static/master.svg?style=flat-square&logo=travis)](https://travis-ci.org/multiarch/qemu-user-static/builds) [![Releases](https://img.shields.io/github/commits-since/multiarch/qemu-user-static/latest.svg?style=flat-square)](https://github.com/multiarch/qemu-user-static/releases) [![Docker Hub](https://img.shields.io/docker/pulls/multiarch/qemu-user-static.svg?style=flat-square)](https://hub.docker.com/r/multiarch/qemu-user-static/)
+[![License](https://img.shields.io/github/license/multiarch/qemu-user-static.svg?style=flat-square)](./LICENSE) ![actions](https://github.com/multiarch/qemu-user-static/workflows/actions/badge.svg) [![Releases](https://img.shields.io/github/commits-since/multiarch/qemu-user-static/latest.svg?style=flat-square)](https://github.com/multiarch/qemu-user-static/releases) [![Docker Hub](https://img.shields.io/docker/pulls/multiarch/qemu-user-static.svg?style=flat-square)](https://hub.docker.com/r/multiarch/qemu-user-static/)
 
 ![](https://raw.githubusercontent.com/multiarch/dockerfile/master/logo.jpg)
 
