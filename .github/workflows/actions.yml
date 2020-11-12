@@ -1,0 +1,48 @@
+name: actions
+on: push
+jobs:
+  qemu-user-static:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set variables
+        run: |
+          echo "RELEASE=${RELEASE}" >> $GITHUB_ENV
+          echo "BUILD=${BUILD}" >> $GITHUB_ENV
+          echo "DOCKER_SERVER=${DOCKER_SERVER}" >> $GITHUB_ENV
+          echo "PACKAGE_URI=${PACKAGE_URI}" >> $GITHUB_ENV
+          echo "VERSION=$RELEASE-$(echo $BUILD | sed 's/\..*//')" >> $GITHUB_ENV
+          echo "DOCKER_REPO=$DOCKER_SERVER/$GITHUB_REPOSITORY" >> $GITHUB_ENV
+        env:
+          RELEASE: 5.1.0
+          BUILD: 7.fc34
+          # See qemu-user-static's RPM spec file on Fedora to check the new version.
+          # https://src.fedoraproject.org/rpms/qemu/blob/master/f/qemu.spec
+          DOCKER_SERVER: docker.io
+          PACKAGE_URI: https://kojipkgs.fedoraproject.org/packages/qemu
+      - name: Build releases
+        run: |
+          sudo apt install rpm2cpio cpio
+          PACKAGE_URI=$PACKAGE_URI/$RELEASE/$BUILD/x86_64/qemu-user-static-$RELEASE-$BUILD.x86_64.rpm
+          wget --content-disposition $PACKAGE_URI
+          rpm2cpio $(basename "$PACKAGE_URI") | cpio -dimv
+          ./generate_tarballs.sh
+      - name: Publish releases
+        if: github.ref == 'refs/heads/master'
+        run: |
+          sudo apt install jq
+          ./publish.sh -v "$VERSION" -t "$GITHUB_TOKEN" -r "$GITHUB_REPOSITORY"
+      - name: Build images
+        if: github.ref == 'refs/heads/master'
+        run: |
+          ./update.sh -v "$VERSION" -t "$VERSION" -r "$GITHUB_REPOSITORY" -d "$DOCKER_REPO"
+      - name: Test images
+        run: |
+          docker images
+          ./test.sh -d "$DOCKER_REPO"
+      - name: Publish images
+        if: github.ref == 'refs/heads/master'
+        run: |
+          DOCKER_USER=${{ secrets.DOCKER_USER }}
+          docker login -u $DOCKER_USER -p ${{ secrets.DOCKER_TOKEN }}
+          docker push $DOCKER_REPO
