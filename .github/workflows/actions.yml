@@ -31,7 +31,7 @@ jobs:
         if: github.ref == 'refs/heads/master'
         run: |
           sudo apt install jq
-          ./publish.sh -v "$VERSION" -t "$GITHUB_TOKEN" -r "$GITHUB_REPOSITORY"
+          ./publish.sh -v "$VERSION" -t ${{ secrets.GITHUB_TOKEN }} -r "$GITHUB_REPOSITORY"
       - name: Build images
         if: github.ref == 'refs/heads/master'
         run: |
