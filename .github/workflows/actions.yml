@@ -14,8 +14,8 @@ jobs:
           echo "VERSION=$RELEASE-$(echo $BUILD | sed 's/\..*//')" >> $GITHUB_ENV
           echo "DOCKER_REPO=$DOCKER_SERVER/$GITHUB_REPOSITORY" >> $GITHUB_ENV
         env:
-          RELEASE: 5.1.0
-          BUILD: 7.fc34
+          RELEASE: 5.2.0
+          BUILD: 4.fc34
           # See qemu-user-static's RPM spec file on Fedora to check the new version.
           # https://src.fedoraproject.org/rpms/qemu/blob/master/f/qemu.spec
           DOCKER_SERVER: docker.io
