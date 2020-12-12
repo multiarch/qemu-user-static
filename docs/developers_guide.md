@@ -80,9 +80,9 @@ binfmt_misc is a feature of kernel. A container uses the host OS's kernel.
 ## Programs input & output
 
 In this section, we describe a program's input and output.
-This repository is a pipeline system by using Travis CI.
+This repository is a pipeline system by using Github Actions.
 
-First, we describe the entire pipelne system's input and output. `.travis.yml` is the top level file.
+First, we describe the entire pipelne system's input and output. `.github/workflows/actions.yml` is the top level file.
 
 * Input of the pipeline: `qemu-user-static-X.Y.Z-R.fcNN.$arch.rpm` RPM file under [Fedora Project URL](https://kojipkgs.fedoraproject.org/packages/qemu). Right now `$arch` is only x86_64.
 * Output of the pipeline:
