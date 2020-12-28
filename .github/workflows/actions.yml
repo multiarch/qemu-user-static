@@ -7,25 +7,17 @@ jobs:
       - uses: actions/checkout@v2
       - name: Set variables
         run: |
-          echo "RELEASE=${RELEASE}" >> $GITHUB_ENV
-          echo "BUILD=${BUILD}" >> $GITHUB_ENV
-          echo "DOCKER_SERVER=${DOCKER_SERVER}" >> $GITHUB_ENV
-          echo "PACKAGE_URI=${PACKAGE_URI}" >> $GITHUB_ENV
-          echo "VERSION=$RELEASE-$(echo $BUILD | sed 's/\..*//')" >> $GITHUB_ENV
-          echo "DOCKER_REPO=$DOCKER_SERVER/$GITHUB_REPOSITORY" >> $GITHUB_ENV
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+          echo "ORIGIN_VERSION=${ORIGIN_VERSION}" >> $GITHUB_ENV
+          echo "DOCKER_REPO=${DOCKER_REPO}/$GITHUB_REPOSITORY" >> $GITHUB_ENV
         env:
-          RELEASE: 5.1.0
-          BUILD: 8.fc33
-          # See qemu-user-static's RPM spec file on Fedora to check the new version.
-          # https://src.fedoraproject.org/rpms/qemu/blob/master/f/qemu.spec
-          DOCKER_SERVER: docker.io
-          PACKAGE_URI: https://kojipkgs.fedoraproject.org/packages/qemu
+          VERSION: 5.2.0-1
+          ORIGIN_VERSION: 5.2+dfsg-2
+          DOCKER_REPO: docker.io
       - name: Build releases
         run: |
-          sudo apt install rpm2cpio cpio
-          PACKAGE_URI=$PACKAGE_URI/$RELEASE/$BUILD/x86_64/qemu-user-static-$RELEASE-$BUILD.x86_64.rpm
-          wget --content-disposition $PACKAGE_URI
-          rpm2cpio $(basename "$PACKAGE_URI") | cpio -dimv
+          wget --content-disposition http://ftp.de.debian.org/debian/pool/main/q/qemu/qemu-user-static_${ORIGIN_VERSION}_amd64.deb
+          dpkg-deb -R qemu-user-static_*.deb .
           ./generate_tarballs.sh
       - name: Publish releases
         if: github.ref == 'refs/heads/master'
