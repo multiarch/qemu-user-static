@@ -11,8 +11,8 @@ jobs:
           echo "ORIGIN_VERSION=${ORIGIN_VERSION}" >> $GITHUB_ENV
           echo "DOCKER_REPO=${DOCKER_REPO}/$GITHUB_REPOSITORY" >> $GITHUB_ENV
         env:
-          VERSION: 5.2.0-1
-          ORIGIN_VERSION: 5.2+dfsg-2
+          VERSION: 5.2.0-2
+          ORIGIN_VERSION: 5.2+dfsg-3
           DOCKER_REPO: docker.io
       - name: Build releases
         run: |
