@@ -1,39 +1,51 @@
 name: actions
-on: push
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - containers/**
+      - .github/workflows/actions.yml
+      - "*.sh"
+  pull_request:
+    branches:
+      - master
+    paths:
+      - containers/**
+      - .github/workflows/actions.yml
+      - "*.sh"
 jobs:
   qemu-user-static:
     runs-on: ubuntu-latest
+    env:
+      VERSION: 5.2.0-11
+      ORIGIN_VERSION: 5.2+dfsg-11
     steps:
       - uses: actions/checkout@v2
       - name: Set variables
         run: |
-          echo "VERSION=${VERSION}" >> $GITHUB_ENV
-          echo "ORIGIN_VERSION=${ORIGIN_VERSION}" >> $GITHUB_ENV
-          echo "DOCKER_REPO=${DOCKER_REPO}/$GITHUB_REPOSITORY" >> $GITHUB_ENV
-        env:
-          VERSION: 5.2.0-2
-          ORIGIN_VERSION: 5.2+dfsg-3
-          DOCKER_REPO: docker.io
-      - name: Build releases
+          echo "DOCKER_REPO=docker.io/$GITHUB_REPOSITORY" >> $GITHUB_ENV
+      - name: Build
         run: |
-          wget --content-disposition http://ftp.de.debian.org/debian/pool/main/q/qemu/qemu-user-static_${ORIGIN_VERSION}_amd64.deb
-          dpkg-deb -R qemu-user-static_*.deb .
-          ./generate_tarballs.sh
-      - name: Publish releases
-        if: github.ref == 'refs/heads/master'
-        run: |
-          sudo apt install jq
-          ./publish.sh -v "$VERSION" -t ${{ secrets.GITHUB_TOKEN }} -r "$GITHUB_REPOSITORY"
-      - name: Build images
-        if: github.ref == 'refs/heads/master'
-        run: |
-          ./update.sh -v "$VERSION" -t "$VERSION" -r "$GITHUB_REPOSITORY" -d "$DOCKER_REPO"
-      - name: Test images
-        run: |
-          docker images
-          ./test.sh -d "$DOCKER_REPO"
-      - name: Publish images
+          wget --content-disposition http://ftp.de.debian.org/debian/pool/main/q/qemu/qemu-user-static_${{ env.ORIGIN_VERSION }}_amd64.deb
+          dpkg-deb -R qemu-user-static_*.deb releases
+          ./run.sh -t "${{ env.VERSION }}" -r "${{ env.GITHUB_REPOSITORY }}" -d "${{ env.DOCKER_REPO }}"
+      - name: Test
+        run: ./test.sh -d "${{ env.DOCKER_REPO }}"
+      - name: Publish
         if: github.ref == 'refs/heads/master'
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKEN }}
-          docker push $DOCKER_REPO
+          docker push ${{ env.DOCKER_REPO }}
+      - name: Create Release
+        if: github.ref == 'refs/heads/master'
+        uses: actions/create-release@latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: "v${{ env.VERSION }}"
+          release_name: "v${{ env.VERSION }}"
+          body: |
+            # `qemu-*-static` @ ${{ env.VERSION }}
+          draft: false
+          prerelease: false
