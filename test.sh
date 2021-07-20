@@ -23,7 +23,7 @@ fi
 
 # It should register binfmt_misc entry with 'flags: F'
 # by given "-p yes" option.
-sudo docker run --rm --privileged ${DOCKER_REPO} --reset -p yes
+docker run --rm --privileged ${DOCKER_REPO} --reset -p yes
 cat /proc/sys/fs/binfmt_misc/qemu-aarch64
 grep -q '^flags: F$' /proc/sys/fs/binfmt_misc/qemu-aarch64
 
@@ -53,7 +53,7 @@ docker run --rm -t arm64v8/fedora uname -m
 
 # It should register binfmt_misc entry with 'flags: '
 # by given no "-p yes" option.
-sudo docker run --rm --privileged ${DOCKER_REPO}:register --reset
+docker run --rm --privileged ${DOCKER_REPO}:register --reset
 cat /proc/sys/fs/binfmt_misc/qemu-aarch64
 grep -q '^flags: $' /proc/sys/fs/binfmt_misc/qemu-aarch64
 
