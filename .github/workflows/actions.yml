@@ -18,8 +18,8 @@ jobs:
   qemu-user-static:
     runs-on: ubuntu-latest
     env:
-      VERSION: 6.0.0-1
-      ORIGIN_VERSION: 6.0+dfsg-1~exp0
+      VERSION: 6.0.0-2
+      ORIGIN_VERSION: 6.0+dfsg-2exp
     steps:
       - uses: actions/checkout@v2
       - name: Set variables
