@@ -33,7 +33,7 @@ releases_dir="releases/usr/bin/"
 cd ${releases_dir}
 for file in *; do
     tar -czf $file.tar.gz $file;
-    mv $file.tar.gz x86_64_$file.tar.gz
+    cp $file.tar.gz x86_64_$file.tar.gz
 done
 cd ${root_dir}
 

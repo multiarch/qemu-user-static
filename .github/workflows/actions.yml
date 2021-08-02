@@ -45,7 +45,7 @@ jobs:
           tag: "v${{ env.VERSION }}"
           body: |
             # `qemu-*-static` @ ${{ env.VERSION }}
-          artifacts: "releases/usr/bin/*.tar.gz"
+          artifacts: "releases/usr/bin/*.tar.gz,releases/usr/bin/qemu-*-static"
           draft: false
           prerelease: false
           token: ${{ secrets.GITHUB_TOKEN }}
