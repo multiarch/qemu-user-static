@@ -1,8 +1,0 @@
-*.swp
-*~
-# Ignore generated files
-/containers/latest/qemu-*-static
-/containers/register/Dockerfile
-/containers/register/register.sh
-/containers/x86_64_qemu-*/
-/releases
