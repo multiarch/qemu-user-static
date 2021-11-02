@@ -36,7 +36,7 @@ jobs:
         if: github.ref == 'refs/heads/master'
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKEN }}
-          docker push ${{ env.DOCKER_REPO }}
+          docker push --all-tags ${{ env.DOCKER_REPO }}
       - name: Create Release
         if: github.ref == 'refs/heads/master'
         uses: ncipollo/release-action@v1
