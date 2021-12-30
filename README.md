@@ -42,9 +42,7 @@ armv7l
 
 $ docker run --rm -t ppc64le/busybox uname -m
 ppc64le
-```
 
-```
 $ docker run --rm -t i386/ubuntu uname -m
 x86_64
 ```
