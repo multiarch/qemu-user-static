@@ -114,7 +114,7 @@ When same name's file `/proc/sys/fs/binfmt_misc/qemu-$arch` exists, the register
 $ docker run --rm --privileged multiarch/qemu-user-static [--reset][--help][-p yes][options]
 ```
 
-On below image, we can not specify `-p yes` (`--persistent yes`) option. Because an interpreter's existance is checked when registering a binfmt_misc entry. As the interpreter does not exist in the container, the register script finshes with the error.
+On below image, we can not specify `-p yes` (`--persistent yes`) option. Because an interpreter's existance is checked when registering a binfmt_misc entry. As the interpreter does not exist in the container, the register script finishes with an error.
 
 ```
 $ docker run --rm --privileged multiarch/qemu-user-static:register [--reset][--help][options]
