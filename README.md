@@ -4,8 +4,8 @@
 
 ![](https://raw.githubusercontent.com/multiarch/dockerfile/master/logo.jpg)
 
-**multiarch/qemu-user-static** is to enable an execution of different multi-architecture containers by QEMU [1] and binfmt_misc [2].
-Here are examples with Docker [3].
+**multiarch/qemu-user-static** is to enable an execution of different multi-architecture containers by QEMU [<sup>1</sup>](#ref-1) and binfmt_misc [<sup>2</sup>](#ref-2).
+Here are examples with Docker [<sup>3</sup>](#ref-3).
 
 ## Getting started
 
@@ -47,7 +47,7 @@ $ docker run --rm -t i386/ubuntu uname -m
 x86_64
 ```
 
-Podman [4] also works.
+Podman [<sup>4</sup>](#ref-4) also works.
 
 ```
 $ sudo podman run --rm --privileged multiarch/qemu-user-static --reset -p yes
@@ -56,7 +56,7 @@ $ podman run --rm -t arm64v8/fedora uname -m
 aarch64
 ```
 
-Singularity [5] also works.
+Singularity [<sup>5</sup>](#ref-5) also works.
 
 ```
 $ sudo singularity run docker://multiarch/qemu-user-static --reset -p yes
@@ -226,8 +226,8 @@ See [Examples & articles](docs/examples.md).
 
 ## References
 
-* [1] QEMU: https://www.qemu.org/
-* [2] binfmt_misc: https://www.kernel.org/doc/html/latest/admin-guide/binfmt-misc.html
-* [3] Docker: https://www.docker.com/
-* [4] Podman: https://podman.io/
-* [5] Singularity: https://sylabs.io/singularity/
+* <a id="ref-1" href="#ref-1">[1]</a> QEMU: https://www.qemu.org/
+* <a id="ref-2" href="#ref-2">[2]</a> binfmt_misc: https://www.kernel.org/doc/html/latest/admin-guide/binfmt-misc.html
+* <a id="ref-3" href="#ref-3">[3]</a> Docker: https://www.docker.com/
+* <a id="ref-4" href="#ref-4">[4]</a> Podman: https://podman.io/
+* <a id="ref-5" href="#ref-5">[5]</a> Singularity: https://sylabs.io/singularity/
