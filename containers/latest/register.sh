@@ -1,7 +1,7 @@
 #!/bin/sh
 
 QEMU_BIN_DIR=${QEMU_BIN_DIR:-/usr/bin}
-
+QEMU_SUFFIX=${QEMU_SUFFIX:--static}
 
 if [ ! -d /proc/sys/fs/binfmt_misc ]; then
     echo "No binfmt support in the kernel."
@@ -20,4 +20,4 @@ if [ "${1}" = "--reset" ]; then
     find /proc/sys/fs/binfmt_misc -type f -name 'qemu-*' -exec sh -c 'echo -1 > {}' \;
 fi
 
-exec /qemu-binfmt-conf.sh --qemu-suffix "-static" --qemu-path "${QEMU_BIN_DIR}" $@
+exec /qemu-binfmt-conf.sh --qemu-suffix "${QEMU_SUFFIX}" --qemu-path "${QEMU_BIN_DIR}" $@
