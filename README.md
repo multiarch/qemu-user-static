@@ -146,7 +146,7 @@ Usage: qemu-binfmt-conf.sh [--qemu-path PATH][--debian][--systemd CPU]
                       are cloned from the open file.
 ```
 
-You can run `/usr/bin/qemu-$arch-static` binary file` in the container.
+You can run `/usr/bin/qemu-$arch-static` binary file in the container.
 
 ```
 $ docker run --rm -t multiarch/qemu-user-static:x86_64-aarch64 /usr/bin/qemu-aarch64-static -help
